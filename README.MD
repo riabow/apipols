@@ -1,18 +1,29 @@
 # apipols
 
 # install instructions :
+
 mkdir testtask
+
 cd testtask
+
 git clone https://github.com/riabow/apipols.git
+
 virtualenv env
+
 cd env
+
 # " That for Windows  / этo  для Винды  "
+
 cd Scripts
+
 # " That for Linux / этo  для Linux   "
+
 cd bin
 
 activate 
+
 cd ..
+
 cd ..
 
 pip install Django==2.2.10
@@ -31,10 +42,6 @@ python manage.py runserver
 http://127.0.0.1:8000/admin/
 
 http://127.0.0.1:8000/api/
-
-
-
-
 
 
 
