@@ -16,13 +16,20 @@ cd ..
 cd ..
 
 pip install Django==2.2.10
+
 pip install djangorestframework
+
 pip install markdown
+
 pip install django-filter
+
 cd apipols
+
 python manage.py runserver
 
+
 http://127.0.0.1:8000/admin/
+
 http://127.0.0.1:8000/api/
 
 
