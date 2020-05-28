@@ -44,7 +44,7 @@ class MultiOption(models.Model):
 class Answer(models.Model):
     question = models.ForeignKey( Question, on_delete=models.DO_NOTHING, verbose_name='вопрос')
     option = models.ForeignKey(Option, on_delete=models.DO_NOTHING, null = True, blank=True , verbose_name='вариант' )
-    multioption = models.ManyToManyField(MultiOption, verbose_name='варианты')
+    multioption = models.ManyToManyField(MultiOption, blank=True ,  verbose_name='варианты')
     userid = models.IntegerField( "номер пользователя ",null = True, blank=True  );
     text = models.CharField('текст ответа',max_length=200, null = True, blank=True )
 

@@ -32,6 +32,9 @@ def index(requests):
      <br>
     <a href ="/admin/">admin panel </a><br>
     <a href ="/api/">api </a><br>
+    <a href ="/polls/">polls </a><br>
+    <a href ="/polls/activequestions">active questions </a><br>
+    <a href ="/polls/users_answers/1/"> ответы пользователя id=1 </a><br>
     </div>
     
     ''')
