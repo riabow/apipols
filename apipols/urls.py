@@ -23,41 +23,20 @@ from django.contrib.auth.models import User, Group
 from rest_framework import routers, serializers, viewsets
 
 from polls.models import *
+from . import views
+
+import datetime
+from django.utils import timezone
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
-# Serializers define the API representation.
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ['url', 'username', 'email', 'is_staff']
 
-
-# ViewSets define the view behavior.
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-router.register(r'users', UserViewSet)
-#************************
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Group
-        fields = ['url', 'name']
-
-class GroupViewSet(viewsets.ModelViewSet):
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
-
-router.register(r'group', GroupViewSet)
 
 
 
 
 # *********************************
 class QuestionSerializer(serializers.HyperlinkedModelSerializer):
-    #answers = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    #start_date = serializers.DateTimeField(read_only=True)
-    #print(start_date)
     class Meta:
         model = Question
         fields = ['url','id', 'title', 'descr', 'start_date', 'finish_date' ]
@@ -68,10 +47,21 @@ class QuestionViewSet(viewsets.ModelViewSet):
 
 router.register(r'Question', QuestionViewSet)
 
+class ActiveQuestionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Question
+        fields = ['url','id', 'title', 'descr', 'start_date', 'finish_date' ]
+
+class ActiveQuestionViewSet(viewsets.ModelViewSet):
+    queryset = Question.objects.all().filter(finish_date__gte=datetime.date.today() )  #finish_date >= timezone.now)
+    serializer_class = ActiveQuestionSerializer
+
+router.register(r'ActiveQuestion', ActiveQuestionViewSet)
+
 
 # *********************************
 class AnswerSerializer(serializers.HyperlinkedModelSerializer):
-    multioption = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    #multioption = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     class Meta:
         model = Answer
         fields = ['id','url', 'userid', 'text', 'question', 'option', 'multioption']
@@ -109,14 +99,11 @@ router.register(r'MultiOption', MultiOptionViewSet)
 
 
 
-#router.register(r'groups', views.GroupViewSet)
-#router.register(r'part', views.PartViewSet)
-#router.register(r'Brent', views.BrentViewSet)
-
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.index, name='index'),
 
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/', include(router.urls)),

@@ -1,5 +1,5 @@
 from django.db import models
-
+from pprint import pprint
 
 class Question(models.Model):
     title = models.CharField('заголовок',max_length=200)
@@ -9,38 +9,47 @@ class Question(models.Model):
     __original_start_date = None
 
     def __str__(self):
-        return '%s  ' % (self.title)
+        return '(%s) %s' % (self.id , self.title)
 
     def __init__(self, *args, **kwargs):
         super(Question, self).__init__(*args, **kwargs)
         self.__original_start_date = self.start_date
 
     def save(self, *args, **kwargs):
-        if self.start_date != self.__original_start_date:
-            self.start_date = self.__original_start_date
+        print("saveing Question  ........................" )
+        pprint(locals())
+        #if self.start_date != self.__original_start_date:
+        #    self.start_date = self.__original_start_date
+        if self.id is not None:
+            orig = Question.objects.get(id=self.id)
+            if orig.start_date != self.start_date:
+                self.start_date = orig.start_date
+                #print ("old data", self.start_date )
+
         super(Question, self).save(*args, **kwargs)
+
 
 
 class Option(models.Model):
     title = models.CharField('заголовок', max_length=200)
     def __str__(self):
-        return '%s  ' % (self.title)
+        return '(%s) %s' % (self.id , self.title)
 
 
 class MultiOption(models.Model):
     title = models.CharField('заголовок', max_length=200)
     def __str__(self):
-        return '%s  ' % (self.title)
+        return '(%s) %s' % (self.id , self.title)
 
 class Answer(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.DO_NOTHING)
-    option = models.ForeignKey(Option, on_delete=models.DO_NOTHING, null = True, blank=True  )
-    multioption = models.ManyToManyField(MultiOption)
+    question = models.ForeignKey( Question, on_delete=models.DO_NOTHING, verbose_name='вопрос')
+    option = models.ForeignKey(Option, on_delete=models.DO_NOTHING, null = True, blank=True , verbose_name='вариант' )
+    multioption = models.ManyToManyField(MultiOption, verbose_name='варианты')
     userid = models.IntegerField( "номер пользователя ",null = True, blank=True  );
     text = models.CharField('текст ответа',max_length=200, null = True, blank=True )
 
     def __str__(self):
-        return '%s  ' % (self.text)
+        return '(%s) %s' % (self.id , self.text)
 
 
 
